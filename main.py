@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from gui import Window
+from control import Window
 
 
 if __name__ == "__main__":
