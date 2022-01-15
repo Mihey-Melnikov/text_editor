@@ -34,8 +34,8 @@ def create_button(master, text, command, x, y, height=None, width=None):
     place_obj(btn, x, y, height, width)
 
 
-def get_combobox(master, values, x, y, height=None, width=None, current=0):
-    combobox = ttk.Combobox(master=master, values=values)
+def get_combobox(master, values, x, y, height=None, width=None, current=0, state="normal"):
+    combobox = ttk.Combobox(master=master, values=values, state=state)
     place_obj(combobox, x, y, height, width)
     combobox.current(current)
     return combobox
@@ -49,3 +49,21 @@ def get_frame(master, bg, x, y, height=None, width=None):
 
 def create_bind(obj, event, command):
     obj.bind(event, command)
+
+
+def create_label(master, text, x, y, height=None, width=None):
+    lbl = Label(master=master, text=text)
+    place_obj(lbl, x, y, height, width)
+
+
+def get_entry(master, x, y, state="normal", height=None, width=None):
+    entry = Entry(master=master, state=state)
+    place_obj(entry, x, y, height, width)
+    return entry
+
+
+def get_spinbox(master, x, y, from_=0, to=0, state="normal", command=lambda: True, height=None, width=None):
+    spinbox = Spinbox(master=master, from_=from_, to=to, state=state, command=command)
+    place_obj(spinbox, x, y, height, width)
+    return spinbox
+

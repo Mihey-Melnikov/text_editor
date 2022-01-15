@@ -1,22 +1,45 @@
 import os
+import re
 
 
 def check_and_open_file(file_path):
     if file_path == "":
-        return False, ""
+        raise FileNotFoundError
     if file_path[-4:] != ".txt":
-        return False, "Неверный формат файла"
-    with open(file_path, "r") as file:
-        return True, file.read()
+        raise FileNotFoundError("Неверный формат файла")
+    pages = []
+    previous_tail = ""
+    p = re.compile(r"""[.!?»"] \w""")
+    file = open(file_path, 'r', encoding='utf-8')
+    while True:
+        new_data = file.read(4096)
+        if not new_data:
+            break
+        if len(new_data) == 4096:
+            last_index = [m.end(0) for m in re.finditer(p, new_data)][-1] - 1
+            new_tail = new_data[last_index:]
+            pages.append(previous_tail + new_data[:last_index])
+            previous_tail = new_tail
+        else:
+            pages.append(previous_tail + new_data)
+    file.close()
+    return pages
 
 
 def save_file(file_path, text):
-    with open(file_path, "w") as file:
+    with open(file_path, encoding="utf-8", mode="w") as file:
         file.write(text)
 
 
 def delete_file(file_path):
     os.remove(file_path)
+
+
+def shift_pos(pos, count):
+    line = pos.split(".")[0]
+    row = int(pos.split(".")[1])
+    return f"{line}.{row + int(count)}"
+
 
 # todo реализовать логику работы с тегами через класс ниже
 # todo это поможет сохранять теги и возобновлять форматирование при повторном открытии файла
